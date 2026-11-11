@@ -1,0 +1,25 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1800" fill="none">
+
+  <g stroke="#ffffff" stroke-width="1.2">
+
+    <path d="M-300 250 C150 -100 350 650 850 650 S1400 900 1900 400" opacity=".22"></path>
+
+    <path d="M-300 290 C150 -60 350 690 850 690 S1400 940 1900 440" opacity=".12"></path>
+
+    <path d="M-300 330 C150 -20 350 730 850 730 S1400 980 1900 480" opacity=".08"></path>
+
+    <path d="M-400 1050 C100 650 400 1300 850 1150 S1450 850 1900 1300" opacity=".18"></path>
+
+    <path d="M-400 1100 C100 700 400 1350 850 1200 S1450 900 1900 1350" opacity=".10"></path>
+
+    <circle cx="1250" cy="450" r="280" opacity=".15"></circle>
+
+    <circle cx="1250" cy="450" r="350" opacity=".08"></circle>
+
+    <circle cx="150" cy="1450" r="250" opacity=".12"></circle>
+
+    <circle cx="150" cy="1450" r="320" opacity=".06"></circle>
+
+  </g>
+</svg>

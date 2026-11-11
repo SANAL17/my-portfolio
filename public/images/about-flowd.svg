@@ -1,0 +1,38 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1800" fill="none">
+  <defs>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="white" stop-opacity=".18"></stop>
+      <stop offset=".5" stop-color="white" stop-opacity=".06"></stop>
+      <stop offset="1" stop-color="white" stop-opacity="0"></stop>
+    </linearGradient>
+    <filter id="blur">
+      <feGaussianBlur stdDeviation="2"></feGaussianBlur>
+    </filter>
+  </defs>
+
+  <!-- Large abstract flowing curves -->
+  <g stroke="white" fill="none">
+    <path d="M-400 150 C200 100 300 650 900 700 S1500 950 1900 600" stroke-width="2" opacity=".16"></path>
+
+    <path d="M-400 220 C200 170 300 720 900 770 S1500 1020 1900 670" stroke-width="1" opacity=".1"></path>
+
+    <path d="M-300 1050 C250 650 500 1200 900 1150 S1400 900 1850 1250" stroke-width="2" opacity=".12"></path>
+
+    <path d="M-300 1120 C250 720 500 1270 900 1220 S1400 970 1850 1320" stroke-width="1" opacity=".08"></path>
+
+    <!-- Oversized circular geometry -->
+    <circle cx="1300" cy="450" r="340" stroke-width="1.5" opacity=".12"></circle>
+
+    <circle cx="1300" cy="450" r="420" stroke-width="1" opacity=".06"></circle>
+
+    <circle cx="150" cy="1450" r="300" stroke-width="1.5" opacity=".1"></circle>
+
+    <circle cx="150" cy="1450" r="380" stroke-width="1" opacity=".05"></circle>
+  </g>
+
+  <!-- Subtle light accents -->
+  <ellipse cx="1250" cy="450" rx="280" ry="350" fill="white" opacity=".025" filter="url(#blur)"></ellipse>
+
+  <rect width="1600" height="1800" fill="url(#fade)"></rect>
+</svg>
