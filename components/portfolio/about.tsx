@@ -35,41 +35,7 @@ const stats = [
   { text: 'MERN', label: 'Stack Development' },
 ]
 
-function TechMarquee() {
-  const row = [...skills, ...skills]
 
-  return (
-    <div
-      className="relative mt-16 overflow-hidden border-y border-white/15 py-6
-      [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]"
-    >
-      <div className="animate-marquee flex w-max gap-4 hover:[animation-play-state:paused]">
-        {row.map((skill, i) => {
-          const Icon = skill.icon
-
-          return (
-            <div
-              key={`${skill.name}-${i}`}
-              className="flex items-center gap-3 border border-white/15
-              bg-white/[0.03] px-6 py-3 text-sm text-white/60
-              transition-all duration-300 hover:border-white
-              hover:bg-white hover:text-black"
-            >
-              <Icon
-                className="size-4"
-                style={{ color: skill.color }}
-              />
-
-              <span className="font-mono text-xs tracking-wider">
-                {skill.name}
-              </span>
-            </div>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
 
 export function About() {
   const sectionRef = useRef<HTMLElement>(null)
