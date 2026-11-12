@@ -372,7 +372,7 @@
 
   font-family: 'Anton', sans-serif;
 
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
 
   letter-spacing: 0.025em;
@@ -626,4 +626,5 @@
     animation: none;
   }
 }
+
 

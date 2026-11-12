@@ -1,181 +1,467 @@
+
 'use client'
 
 import { useState, type FormEvent } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowUpRight, CheckCircle2, Loader2, Mail, MapPin, Send, XCircle } from 'lucide-react'
-import { FaGithub, FaLinkedinIn } from 'react-icons/fa'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import {
+  ArrowUpRight,
+  CheckCircle2,
+  Loader2,
+  Mail,
+  MapPin,
+  Send,
+  XCircle,
+} from 'lucide-react'
 import emailjs from '@emailjs/browser'
 import { profile } from '@/lib/portfolio-data'
-import { SectionHeading, fadeUp, stagger } from './motion-primitives'
 
-const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
-const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
-const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
-const isConfigured = Boolean(SERVICE_ID && TEMPLATE_ID && PUBLIC_KEY)
+import { FaGithub, FaInstagram, FaLinkedinIn } from 'react-icons/fa'
 
-type Status = { type: 'idle' } | { type: 'sending' } | { type: 'success' } | { type: 'error'; message: string }
+
+type Status =
+  | { type: 'idle' }
+  | { type: 'sending' }
+  | { type: 'success' }
+  | { type: 'error'; message: string }
 
 const channels = [
-  { label: 'Email', value: profile.email, href: `mailto:${profile.email}`, Icon: Mail },
-  { label: 'LinkedIn', value: 'in/sanal-k', href: profile.socials.linkedin, Icon: FaLinkedinIn },
-  { label: 'GitHub', value: '@SANAL17', href: profile.socials.github, Icon: FaGithub },
-  { label: 'Location', value: profile.location, Icon: MapPin },
+  {
+    label: 'EMAIL',
+    value: profile.email,
+    href: `mailto:${profile.email}`,
+    Icon: Mail,
+    number: '01',
+    external: false,
+  },
+  {
+    label: 'LINKEDIN',
+    value: 'Connect professionally',
+    href: profile.socials.linkedin,
+    Icon: FaLinkedinIn,
+    number: '02',
+    external: true,
+  },
+  {
+    label: 'GITHUB',
+    value: 'Explore my repositories',
+    href: profile.socials.github,
+    Icon: FaGithub,
+    number: '03',
+    external: true,
+  },
+  {
+    label: 'LOCATION',
+    value: profile.location,
+    href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(profile.location)}`,
+    Icon: MapPin,
+    number: '04',
+    external: true,
+  },
 ]
 
-const inputClass =
-  'w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-brand/60 focus:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-brand/20'
+const EASE = [0.22, 1, 0.36, 1] as const
 
 export function Contact() {
   const [status, setStatus] = useState<Status>({ type: 'idle' })
+  const reduceMotion = useReducedMotion()
+
+
+  const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
+  const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
+  const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+
+  const isConfigured = Boolean(SERVICE_ID && TEMPLATE_ID && PUBLIC_KEY)
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    const form = e.currentTarget
-    const data = new FormData(form)
 
-    if (!isConfigured) {
+    const form = e.currentTarget
+
+    if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
       setStatus({
         type: 'error',
-        message: `The contact form isn't connected yet. Please email me directly at ${profile.email}.`,
+        message: 'Email service configuration is missing. Please try again later.',
+      })
+      console.error('EmailJS configuration missing:', {
+        serviceId: Boolean(SERVICE_ID),
+        templateId: Boolean(TEMPLATE_ID),
+        publicKey: Boolean(PUBLIC_KEY),
       })
       return
     }
 
+    const data = new FormData(form)
+
     setStatus({ type: 'sending' })
+
     try {
-      await emailjs.send(
-        SERVICE_ID!,
-        TEMPLATE_ID!,
+      const response = await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
         {
           from_name: String(data.get('name') ?? ''),
           email_id: String(data.get('email') ?? ''),
           message: String(data.get('message') ?? ''),
         },
-        PUBLIC_KEY!,
+        {
+          publicKey: PUBLIC_KEY,
+        }
       )
+
+      console.log('EmailJS success:', response.status, response.text)
+
       setStatus({ type: 'success' })
       form.reset()
-    } catch {
-      setStatus({ type: 'error', message: 'Failed to send your message. Please try again or email me directly.' })
+    } catch (error) {
+      console.error('EmailJS sending failed:', error)
+
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown EmailJS error'
+
+      setStatus({
+        type: 'error',
+        message: `Message could not be sent: ${errorMessage}`,
+      })
     }
   }
 
+
   return (
-    <section id="contact" className="relative px-5 py-28 md:py-36">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 left-1/2 h-[400px] w-[700px] -translate-x-1/2 rounded-full bg-brand-2/15 blur-[140px]"
-      />
-      <div className="relative mx-auto max-w-6xl">
-        <SectionHeading
-          eyebrow="Contact"
-          title="Let's build"
-          accent="something great."
-          description="Open to full-time roles and freelance projects. I usually reply within a day."
-        />
+    <section
+      id="contact"
+      className="relative isolate overflow-hidden bg-[#050505] px-5 py-10 text-white"
+    >
 
-        <div className="grid gap-5 lg:grid-cols-5">
-          <motion.ul
-            variants={stagger}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
-            className="grid gap-4 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-1"
-          >
-            {channels.map(({ label, value, href, Icon }) => {
-              const content = (
-                <>
-                  <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] transition-all duration-500 group-hover:scale-110 group-hover:border-brand/50 group-hover:shadow-[0_0_24px_-4px_var(--brand)]">
-                    <Icon className="size-5" />
-                  </span>
-                  <span className="flex min-w-0 flex-1 flex-col">
-                    <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">{label}</span>
-                    <span className="truncate font-medium">{value}</span>
-                  </span>
-                  {href && (
-                    <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
-                  )}
-                </>
-              )
-              return (
-                <motion.li key={label} variants={fadeUp}>
-                  {href ? (
-                    <a
-                      href={href}
-                      target={href.startsWith('http') ? '_blank' : undefined}
-                      rel="noopener noreferrer"
-                      className="glass gradient-border group flex items-center gap-4 rounded-2xl p-4 transition-transform hover:-translate-y-0.5"
-                    >
-                      {content}
-                    </a>
-                  ) : (
-                    <div className="glass group flex items-center gap-4 rounded-2xl p-4">{content}</div>
-                  )}
-                </motion.li>
-              )
-            })}
-          </motion.ul>
+      {/* =================================
+          MAIN CONTENT
+      ================================= */}
 
-          <motion.form
-            onSubmit={handleSubmit}
-            initial={{ opacity: 0, y: 30 }}
+      <div className="relative z-10 mx-auto max-w-[1500px]">
+
+        {/* HERO HEADING */}
+
+        <div className="mb-20 md:mb-28">
+
+
+
+          <motion.h2
+            initial={reduceMotion ? false : { opacity: 0, y: 70 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.8 }}
-            className="glass gradient-border flex flex-col gap-4 rounded-3xl p-6 md:p-8 lg:col-span-3"
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease: EASE }}
+            className="text-[clamp(4rem,13vw,12rem)] font-black uppercase leading-[0.78] tracking-[-0.075em]"
           >
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="flex flex-col gap-2 text-sm">
-                <span className="text-muted-foreground">Name</span>
-                <input name="name" required autoComplete="name" placeholder="Your name" className={inputClass} />
-              </label>
-              <label className="flex flex-col gap-2 text-sm">
-                <span className="text-muted-foreground">Email</span>
-                <input name="email" type="email" required autoComplete="email" placeholder="you@company.com" className={inputClass} />
-              </label>
-            </div>
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="text-muted-foreground">Message</span>
-              <textarea name="message" required rows={6} placeholder="Tell me about your project or role..." className={`${inputClass} resize-none`} />
-            </label>
+            LET'S
+            <br />
+            <span className="text-white/20">
+              CONNECT.
+            </span>
+          </motion.h2>
 
-            <button
-              type="submit"
-              disabled={status.type === 'sending'}
-              className="group relative mt-2 inline-flex h-12 items-center justify-center gap-2 overflow-hidden rounded-xl bg-linear-to-r from-brand to-brand-2 font-medium text-white transition-all hover:shadow-[0_10px_40px_-10px_var(--brand)] disabled:opacity-70"
-            >
-              {status.type === 'sending' ? (
-                <>
-                  <Loader2 className="size-4 animate-spin" />
-                  Sending...
-                </>
-              ) : (
-                <>
-                  Send Message
-                  <Send className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-1" />
-                </>
-              )}
-            </button>
+          <div className="mt-12 flex flex-col justify-between gap-6 border-t border-white/20 pt-6 md:flex-row md:items-end">
 
-            <div aria-live="polite" className="min-h-6">
-              <AnimatePresence mode="wait">
-                {status.type === 'success' && (
-                  <motion.p key="ok" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="flex items-center gap-2 text-sm text-emerald-400">
-                    <CheckCircle2 className="size-4" />
-                    {"Thanks! Your message was sent. I'll get back to you soon."}
-                  </motion.p>
-                )}
-                {status.type === 'error' && (
-                  <motion.p key="err" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="flex items-start gap-2 text-sm text-red-400">
-                    <XCircle className="mt-0.5 size-4 shrink-0" />
-                    {status.message}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.form>
+            <p className="max-w-xl text-sm uppercase leading-7 tracking-wider text-white/55 md:text-base">
+              Have an interesting project or opportunity?
+              Let's create something meaningful together.
+            </p>
+
+            <span className="font-mono text-[10px] tracking-[0.2em] text-white/40">
+              DUBAI, UAE / AVAILABLE IMMEDIATELY
+            </span>
+
+          </div>
+
         </div>
+
+        {/* =================================
+            CONTACT GRID
+        ================================= */}
+
+        <div className="grid gap-16 lg:grid-cols-5 lg:gap-20">
+
+          {/* LEFT SIDE - CONTACT LINKS */}
+
+          <div className="lg:col-span-2">
+
+            <div className="mb-8 flex items-center justify-between">
+
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
+                FIND ME HERE
+              </p>
+
+              <ArrowUpRight size={18} className="text-white/50" />
+
+            </div>
+
+            <div className="border-t border-white/15">
+
+              {channels.map(
+                ({ label, value, href, Icon, number, external }, index) => (
+
+                  <motion.a
+                    key={label}
+                    href={href}
+                    target={external ? '_blank' : undefined}
+                    rel={external ? 'noopener noreferrer' : undefined}
+                    initial={reduceMotion ? false : { opacity: 0, x: -25 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.7,
+                      delay: reduceMotion ? 0 : index * 0.1,
+                      ease: EASE,
+                    }}
+                    className="group flex items-center gap-4 border-b border-white/15 py-7 transition-all duration-500 hover:bg-white/[0.035] hover:px-3"
+                  >
+
+                    <span className="font-mono text-[9px] text-white/25">
+                      {number}
+                    </span>
+
+                    {/* ICON */}
+
+                    <div className="flex size-12 shrink-0 items-center justify-center border border-white/15 bg-white/[0.025] transition-all duration-500 group-hover:border-white group-hover:bg-white group-hover:text-black">
+
+                      <Icon size={20} strokeWidth={1.5} />
+
+                    </div>
+
+                    {/* INFORMATION */}
+
+                    <div className="min-w-0 flex-1">
+
+                      <p className="font-mono text-[9px] tracking-[0.2em] text-white/35">
+                        {label}
+                      </p>
+
+                      <p className="mt-2 truncate text-sm font-medium text-white/75 transition-colors group-hover:text-white">
+                        {value}
+                      </p>
+
+                    </div>
+
+                    {/* ARROW */}
+
+                    <ArrowUpRight
+                      size={18}
+                      className="shrink-0 text-white/25 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-white"
+                    />
+
+                  </motion.a>
+
+                ),
+              )}
+
+            </div>
+
+            {/* RESPONSE TIME */}
+
+            <div className="mt-10">
+
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/30">
+                RESPONSE TIME
+              </p>
+
+              <p className="mt-3 text-2xl font-bold tracking-tight">
+                Usually within 24 hours.
+              </p>
+
+            </div>
+
+          </div>
+
+          {/* =================================
+              RIGHT SIDE - CONTACT FORM
+          ================================= */}
+
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.9, ease: EASE }}
+            className="relative border border-white/15 bg-[#080808]/75 p-6 backdrop-blur-xl md:p-10 lg:col-span-3"
+          >
+
+            {/* FORM HEADER */}
+
+            <div className="mb-10 flex items-start justify-between border-b border-white/15 pb-7">
+
+              <div>
+
+                <p className="font-mono text-[9px] tracking-[0.25em] text-white/40">
+                  SEND AN ENQUIRY / 001
+                </p>
+
+                <h3 className="mt-4 text-3xl font-black uppercase tracking-tight md:text-5xl">
+                  START A
+                  <br />
+                  <span className="text-white/30">
+                    CONVERSATION.
+                  </span>
+                </h3>
+
+              </div>
+
+              <Send
+                size={24}
+                strokeWidth={1.2}
+                className="text-white/45"
+              />
+
+            </div>
+
+            {/* FORM */}
+
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col gap-8"
+            >
+
+              {/* NAME + EMAIL */}
+
+              <div className="grid gap-8 sm:grid-cols-2">
+
+                <label className="flex flex-col gap-3">
+
+                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/45">
+                    YOUR NAME
+                  </span>
+
+                  <input
+                    name="name"
+                    required
+                    autoComplete="name"
+                    placeholder="Enter Name"
+                    className="bg-white/10 text-white py-2 px-4 rounded-4xl outline-none text-sm"
+                  />
+
+                </label>
+
+                <label className="flex flex-col gap-3">
+
+                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/45">
+                    EMAIL ADDRESS
+                  </span>
+
+                  <input
+                    name="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    placeholder="Enter Email"
+                    className="bg-white/10 text-white py-2 px-4 rounded-4xl outline-none text-sm"
+                  />
+
+                </label>
+
+              </div>
+
+              {/* MESSAGE */}
+
+              <label className="flex flex-col gap-3">
+
+                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/45">
+                  YOUR MESSAGE
+                </span>
+
+                <textarea
+                  name="message"
+                  required
+                  rows={6}
+                  placeholder="Tell me about your idea, project or opportunity..."
+                  className="bg-white/10 text-white py-2 px-4 rounded-xl outline-none  min-h-[170px] text-sm"
+
+                />
+
+              </label>
+
+              {/* SUBMIT */}
+
+              <button
+                type="submit"
+                disabled={status.type === 'sending'}
+                className="group relative flex h-14 items-center justify-between overflow-hidden border border-white bg-white px-6 text-black transition-all duration-500 hover:bg-transparent hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+              >
+
+                <span className="font-mono text-xs font-bold uppercase tracking-[0.15em]">
+
+                  {status.type === 'sending'
+                    ? 'SENDING MESSAGE...'
+                    : 'SEND MESSAGE'}
+
+                </span>
+
+                {status.type === 'sending' ? (
+
+                  <Loader2 size={19} className="animate-spin" />
+
+                ) : (
+
+                  <ArrowUpRight
+                    size={21}
+                    className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                  />
+
+                )}
+
+              </button>
+
+              {/* SUCCESS / ERROR */}
+
+              <div aria-live="polite" className="min-h-6">
+
+                <AnimatePresence mode="wait">
+
+                  {status.type === 'success' && (
+
+                    <motion.p
+                      key="success"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-2 text-sm text-emerald-400"
+                    >
+
+                      <CheckCircle2 size={17} />
+
+                      Message sent successfully. I'll get back to you soon.
+
+                    </motion.p>
+
+                  )}
+
+                  {status.type === 'error' && (
+
+                    <motion.p
+                      key="error"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-start gap-2 text-sm text-red-400"
+                    >
+
+                      <XCircle size={17} className="shrink-0" />
+
+                      {status.message}
+
+                    </motion.p>
+
+                  )}
+
+                </AnimatePresence>
+
+              </div>
+
+            </form>
+
+          </motion.div>
+
+        </div>
+
+
+
       </div>
+
     </section>
   )
 }

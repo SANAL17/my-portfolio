@@ -81,137 +81,128 @@ export function Skills() {
   return (
     <section
       id="skills"
-      className="relative isolate overflow-hidden bg-[#050505] px-5 py-28 text-white md:py-40"
+      className="relative isolate overflow-hidden bg-[#050505] px-5 py-10 text-white "
     >
-      {/* EDITORIAL BACKGROUND */}
+
+
+      {/* RIGHT EDGE — SCULPTURAL SHELL */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10"
-      >
-        <div className="absolute inset-0 opacity-[0.08] bg-[radial-gradient(#ffffff_0.6px,transparent_0.6px)] [background-size:5px_5px]" />
+        className="about-shell absolute -right-[380px] top-[12%] h-[1100px] w-[700px]"
+      />
 
-        <div className="absolute right-[-15%] top-[10%] h-[500px] w-[500px] rounded-full bg-white/[0.025] blur-[150px]" />
+      {/* SUBTLE GRAIN */}
+      <div
+        aria-hidden="true"
+        className="about-shell-grain absolute inset-0"
+      />
 
-        <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-      </div>
+
 
       <div className="mx-auto max-w-[1500px]">
         {/* TOP INFORMATION */}
-        <div className="mb-10 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 md:mb-16">
-          <span>( 03 ) — Technical Expertise</span>
-          <span>Development / 2026</span>
-        </div>
-
-        {/* GIANT TECH ARSENAL HEADING */}
         <div className="relative mb-16 md:mb-24">
 
 
 
-        
-<div className="w-full overflow-visible">
-  <h2
-    className={cn(
-      display.className,
-      'w-full whitespace-nowrap',
-      'text-[17vw] uppercase leading-[1.15]',
-      'tracking-[-0.04em]',
-      'origin-left [transform:skewX(-8deg)_scaleX(1.2)_scaleY(1.4)]'
-    )}
-  >
-    TECH ARSENAL.
-  </h2>
-</div>
+          <div className="">
 
-
-
-
-
-          {/* DESCRIPTION */}
-          <div className="mt-8 flex flex-col justify-between gap-6 border-t border-white/20 pt-6 md:mt-12 md:flex-row md:items-end">
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.4 }}
-              className="max-w-xl text-sm leading-7 text-white/50 md:text-base"
+            <motion.h2
+              initial={{ opacity: 0, y: 70 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 1,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="text-[clamp(3.5rem,12vw,12rem)] font-black uppercase leading-[0.82] tracking-[-0.075em]"
             >
-              The technologies, tools and frameworks behind
-              every digital experience I build.
-            </motion.p>
+              BEYOND THE
+            </motion.h2>
 
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1.6 }}
-              className="font-mono text-[10px] tracking-[0.2em] text-white/40"
+            <motion.div
+              initial={{ opacity: 0, y: 70 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 1,
+                delay: 0.15,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="mt-3"
             >
-              BUILD / CREATE / INNOVATE
-            </motion.span>
+              <h2 className="text-[clamp(3.5rem,12vw,12rem)] font-black uppercase leading-[0.82] tracking-[-0.075em] text-white/20">
+                INTERFACE.
+              </h2>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 70 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 1,
+                delay: 0.3,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="mt-3"
+            >
+              <h2 className="text-[clamp(3rem,9vw,9rem)] font-black uppercase leading-[0.85] tracking-[-0.07em]">
+                INTO THE LOGIC.
+              </h2>
+            </motion.div>
+
           </div>
-
-          {/* BOTTOM LINE */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 1.3, delay: 1.2 }}
-            className="mt-10 h-px origin-left bg-white/25"
-          />
         </div>
 
-        {/* TECHNOLOGY MARQUEE */}
-        <div className="mb-16 overflow-hidden border-y border-white/10 py-5 md:mb-24">
-          <motion.div
-            animate={reduceMotion ? undefined : { x: ['0%', '-50%'] }}
-            transition={{
-              duration: 35,
-              repeat: Infinity,
-              ease: 'linear',
-            }}
-            className="flex w-max items-center gap-8 whitespace-nowrap"
-          >
-            {[0, 1].map((copy) => (
-              <div key={copy} className="flex items-center gap-8">
-                {skills.map((skill) => (
-                  <div
-                    key={`${copy}-${skill.name}`}
-                    className="flex items-center gap-8"
-                  >
-                    <span className="font-serif text-xl italic text-white/65 md:text-2xl">
-                      {skill.name}
-                    </span>
-
-                    <span className="size-1 rounded-full bg-white/35" />
-                  </div>
-                ))}
-              </div>
-            ))}
-          </motion.div>
-        </div>
 
         {/* SKILLS DIRECTORY HEADER */}
-        <div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+        <motion.div
+          initial={{ opacity: 0, y: 35, filter: 'blur(8px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{
+            duration: 0.9,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end"
+        >
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
-              ( 01 ) — My technical collection
-            </p>
-
             <h3 className="mt-3 text-2xl font-bold uppercase tracking-tight md:text-4xl">
               Tools of the trade<span className="text-white/30">.</span>
             </h3>
           </div>
 
-          <span className="font-mono text-[10px] tracking-widest text-white/40">
+          <motion.span
+            key={filtered.length}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="font-mono text-[10px] tracking-widest text-white/40"
+          >
             {String(filtered.length).padStart(2, '0')} TECHNOLOGIES
-          </span>
-        </div>
+          </motion.span>
+        </motion.div>
 
         {/* CATEGORY FILTERS */}
-        <div className="mb-10 flex flex-wrap gap-x-7 gap-y-4 border-b border-white/15 pb-5">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{
+            duration: 0.8,
+            delay: 0.15,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="mb-10 flex flex-wrap gap-x-7 gap-y-4 border-b border-white/15 pb-5"
+        >
           {categories.map((category, index) => (
-            <button
+            <motion.button
               key={category}
               type="button"
               onClick={() => setActive(category)}
               aria-pressed={active === category}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.96 }}
               className={cn(
                 'group relative pb-2 text-xs uppercase tracking-[0.12em] transition-colors duration-300',
                 active === category
@@ -225,17 +216,22 @@ export function Skills() {
 
               {category}
 
-              <span
-                className={cn(
-                  'absolute bottom-0 left-0 h-px w-full origin-left bg-white transition-transform duration-300',
-                  active === category
-                    ? 'scale-x-100'
-                    : 'scale-x-0 group-hover:scale-x-100'
-                )}
+              <motion.span
+                className="absolute bottom-0 left-0 h-px w-full origin-left bg-white"
+                initial={false}
+                animate={{
+                  scaleX: active === category ? 1 : 0,
+                }}
+                transition={{
+                  duration: 0.35,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
               />
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
+
+        {/* ANIMATED TECHNOLOGY COLLECTION */}
 
         {/* ANIMATED TECHNOLOGY COLLECTION */}
         <motion.div
@@ -246,14 +242,38 @@ export function Skills() {
             {filtered.map((skill, index) => (
               <motion.div
                 layout
-                key={skill.name}
-                initial={reduceMotion ? false : { opacity: 0, y: 35 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
+                key={`${active}-${skill.name}`}
+                initial={{
+                  opacity: 0,
+                  y: 35,
+                  filter: 'blur(8px)',
+                }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                  filter: 'blur(0px)',
+                }}
+                exit={{
+                  opacity: 0,
+                  y: -20,
+                  filter: 'blur(5px)',
+                }}
+                viewport={{
+                  once: false,
+                  amount: 0.2,
+                }}
                 transition={{
-                  duration: 0.55,
-                  delay: reduceMotion ? 0 : index * 0.045,
-                  ease: [0.22, 1, 0.36, 1],
+                  layout: {
+                    duration: 0.5,
+                    ease: [0.22, 1, 0.36, 1],
+                  },
+                  opacity: { duration: 0.65 },
+                  y: {
+                    duration: 0.75,
+                    delay: index * 0.045,
+                    ease: [0.22, 1, 0.36, 1],
+                  },
+                  filter: { duration: 0.6 },
                 }}
                 className="group relative flex items-center gap-5 border-b border-white/[0.13] py-7 transition-colors duration-300 hover:border-white/50 md:py-9"
               >
@@ -263,13 +283,21 @@ export function Skills() {
                 </span>
 
                 {/* TECHNOLOGY ICON */}
-                <div className="flex size-12 shrink-0 items-center justify-center transition-transform duration-500 group-hover:-translate-y-1">
+                <motion.div
+                  className="flex size-12 shrink-0 items-center justify-center"
+                  whileHover={{ y: -5, scale: 1.12, rotate: -5 }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 250,
+                    damping: 15,
+                  }}
+                >
                   <skill.icon
                     className="size-9 transition-all duration-500"
                     style={{ color: skill.color }}
                     aria-hidden="true"
                   />
-                </div>
+                </motion.div>
 
                 {/* NAME AND CATEGORY */}
                 <div className="min-w-0 flex-1">
@@ -284,32 +312,32 @@ export function Skills() {
                 </div>
 
                 {/* HOVER ARROW */}
-                <ArrowUpRight
-                  size={19}
-                  className="shrink-0 text-white/20 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-white"
-                />
+                <motion.div
+                  whileHover={{ x: 4, y: -4 }}
+                  className="shrink-0"
+                >
+                  <ArrowUpRight
+                    size={19}
+                    className="text-white/20 transition-colors duration-300 group-hover:text-white"
+                  />
+                </motion.div>
 
                 {/* BOTTOM HOVER LINE */}
-                <div className="absolute bottom-[-1px] left-0 h-px w-0 bg-white transition-all duration-500 group-hover:w-full" />
+                <motion.div
+                  className="absolute bottom-[-1px] left-0 h-px w-full origin-left bg-white"
+                  initial={{ scaleX: 0 }}
+                  whileHover={{ scaleX: 1 }}
+                  transition={{
+                    duration: 0.5,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                />
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
 
-        {/* END SECTION */}
-        <div className="mt-20 flex flex-col justify-between gap-5 border-t border-white/15 pt-7 md:flex-row md:items-center">
-          <span className="font-mono text-[10px] tracking-[0.2em] text-white/40">
-            END OF TECHNICAL INDEX
-          </span>
 
-          <p className="font-serif text-xl italic text-white/55 md:text-2xl">
-            Always learning. Always building.
-          </p>
-
-          <span className="font-mono text-[10px] text-white/35">
-            SANAL K. / DEVELOPER
-          </span>
-        </div>
       </div>
     </section>
   )

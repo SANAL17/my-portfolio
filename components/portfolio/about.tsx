@@ -1,7 +1,14 @@
 
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
+
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useReducedMotion,
+} from 'framer-motion'
 import {
   ArrowDown,
   ArrowUpRight,
@@ -19,6 +26,7 @@ import {
 } from './motion-primitives'
 import Image from 'next/image'
 import { useRef } from 'react'
+import { Download } from 'lucide-react'
 
 const stats = [
   { value: 3, suffix: '+', label: 'Years Experience' },
@@ -64,168 +72,52 @@ function TechMarquee() {
 }
 
 export function About() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const reduceMotion = useReducedMotion()
 
-  const sequenceRef = useRef<HTMLDivElement>(null)
-
-  // Track scroll progress through the pinned section
   const { scrollYProgress } = useScroll({
-    target: sequenceRef,
-    offset: ['start start', 'end end'],
+    target: sectionRef,
+    offset: ['start end', 'end start'],
   })
 
-  // BEYOND THE
-  const beyondOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.08, 0.26, 0.36],
-    [0, 1, 1, 0]
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 70,
+    damping: 25,
+    restDelta: 0.001,
+  })
+
+  // Background movement
+  const backgroundY = useTransform(
+    smoothProgress,
+    [0, 1],
+    reduceMotion ? ['0%', '0%'] : ['-8%', '8%']
   )
 
-  const beyondY = useTransform(
-    scrollYProgress,
-    [0, 0.08, 0.26, 0.36],
-    [50, 0, 0, -40]
+  const backgroundScale = useTransform(
+    smoothProgress,
+    [0, 1],
+    reduceMotion ? [1, 1] : [1.08, 1]
   )
 
-  const beyondScale = useTransform(
-    scrollYProgress,
-    [0, 0.08, 0.26, 0.36],
-    [0.96, 1, 1, 1.03]
+  // Portrait parallax
+  const portraitY = useTransform(
+    smoothProgress,
+    [0, 1],
+    reduceMotion ? ['0%', '0%'] : ['8%', '-8%']
   )
 
-  // INTERFACE.
-  const interfaceOpacity = useTransform(
-    scrollYProgress,
-    [0.27, 0.39, 0.57, 0.68],
-    [0, 1, 1, 0]
+  const portraitRotate = useTransform(
+    smoothProgress,
+    [0, 1],
+    reduceMotion ? [0, 0] : [1.5, -1.5]
   )
 
-  const interfaceY = useTransform(
-    scrollYProgress,
-    [0.27, 0.39, 0.57, 0.68],
-    [50, 0, 0, -40]
-  )
-
-  const interfaceScale = useTransform(
-    scrollYProgress,
-    [0.27, 0.39, 0.57, 0.68],
-    [0.96, 1, 1, 1.03]
-  )
-
-  // INTO THE LOGIC.
-  const logicOpacity = useTransform(
-    scrollYProgress,
-    [0.60, 0.73, 0.90, 1],
-    [0, 1, 1, 1]
-  )
-
-  const logicY = useTransform(
-    scrollYProgress,
-    [0.60, 0.73, 0.90, 1],
-    [50, 0, 0, 0]
-  )
-
-  const logicScale = useTransform(
-    scrollYProgress,
-    [0.60, 0.73, 0.90, 1],
-    [0.96, 1, 1, 1]
-  )
-
-  const headingClass =
-    'absolute inset-0 flex items-center justify-center px-4 ' +
-    'whitespace-nowrap text-center text-[clamp(2rem,12vw,14rem)] ' +
-    'font-black uppercase leading-none tracking-[-0.075em]'
   return (
     <section
+      ref={sectionRef}
       id="about"
       className="relative overflow-x-clip bg-black text-white"
     >
-
-      {/* EDITORIAL INTRO */}
-
-
-      {/* EDITORIAL SCROLL SEQUENCE */}
-
-      <div
-        ref={sequenceRef}
-        className="relative h-[300vh]"
-      >
-        <div className="sticky top-0 h-[100svh] overflow-hidden">
-
-          {/* TOP INFORMATION */}
-
-      
-
-          {/* CENTER ANIMATION */}
-
-          <div className="absolute inset-0">
-
-            {/* HEADING 01 */}
-
-            <motion.h2
-              style={{
-                opacity: beyondOpacity,
-                y: beyondY,
-              }}
-              className={`${headingClass} [transform:scaleY(1.15)]`}
-            >
-              BEYOND THE
-            </motion.h2>
-
-            {/* HEADING 02 */}
-
-            <motion.h2
-              style={{
-                opacity: interfaceOpacity,
-                y: interfaceY,
-              }}
-              className={`${headingClass} text-white/30`}
-            >
-              INTERFACE.
-            </motion.h2>
-
-            {/* HEADING 03 */}
-
-            <motion.h2
-              style={{
-                opacity: logicOpacity,
-                y: logicY,
-              }}
-              className={headingClass}
-            >
-              INTO THE LOGIC.
-            </motion.h2>
-
-          </div>
-
-          {/* BOTTOM INFORMATION */}
-
-          <div className="absolute bottom-0 left-[5%] right-[5%] z-20 flex items-center justify-between border-t border-white/20 py-5 md:py-7">
-
-            <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 md:text-[10px]">
-              SANAL K. — FULL STACK DEVELOPER
-            </p>
-
-            <motion.div
-              style={{
-                opacity: useTransform(
-                  scrollYProgress,
-                  [0, 0.08, 0.9, 1],
-                  [0.5, 1, 1, 0.5]
-                ),
-              }}
-              className="flex items-center gap-3"
-            >
-              <span className="font-mono text-[9px] uppercase tracking-widest text-white/50">
-                SCROLL TO EXPLORE
-              </span>
-
-              <ArrowDown size={15} className="text-white/60" />
-            </motion.div>
-
-          </div>
-
-        </div>
-      </div>
 
 
 
@@ -235,7 +127,14 @@ export function About() {
         {/* ANIMATED SVG BACKGROUND */}
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
 
-          <div className="about-background absolute inset-[-10%]">
+
+          <motion.div
+            className="about-background absolute inset-[-10%]"
+            style={{
+              y: backgroundY,
+              scale: backgroundScale,
+            }}
+          >
             <Image
               src="/images/about-flow.svg"
               alt=""
@@ -244,7 +143,8 @@ export function About() {
               sizes="100vw"
               className="object-cover opacity-100"
             />
-          </div>
+          </motion.div>
+
 
           {/* Subtle overlays */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/50" />
@@ -258,48 +158,51 @@ export function About() {
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
 
             {/* LEFT — PROFESSIONAL INTRODUCTION */}
-            <Reveal>
+
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 70, filter: 'blur(12px)' }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+                filter: 'blur(0px)',
+              }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{
+                duration: 1.1,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
 
 
 
-              <h3 className="text-5xl font-black uppercase leading-[0.9] md:text-7xl">
-                WHO
-                {" "}
-                I AM<span className="text-white/25">.</span>
-              </h3>
+
+              <motion.h3
+                initial={reduceMotion ? false : { opacity: 0, y: 45 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.7 }}
+                transition={{
+                  duration: 0.9,
+                  delay: 0.12,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="text-5xl font-black uppercase leading-[0.9] md:text-7xl"
+              >
+                WHO I AM<span className="text-white/25">.</span>
+              </motion.h3>
+
+
 
               <p className="mt-8 max-w-xl text-base leading-[1.9] text-white/65 md:text-lg">
-                I'm Sanal K., a Full Stack Developer with 3+ years
-                of professional experience creating scalable web
-                applications, enterprise solutions and meaningful
-                digital experiences.
+                I'm Sanal , a Full Stack Developer with 3 years of
+                professional experience building scalable web applications,
+                enterprise solutions, and high-performance digital
+                experiences. I specialize in creating intuitive user
+                interfaces and robust backend systems that deliver
+                meaningful business value.
               </p>
 
-              {/* WHAT I BUILD */}
 
-              <div className="mt-10 border-t border-white/15 pt-6">
-
-                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
-                  WHAT I BUILD
-                </p>
-
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {[
-                    'ERP SYSTEMS',
-                    'SAAS PLATFORMS',
-                    'BUSINESS APPLICATIONS',
-                    'WEB APPLICATIONS',
-                  ].map((item) => (
-                    <span
-                      key={item}
-                      className="border border-white/15 px-4 py-2.5 text-[10px] tracking-wider text-white/75 transition-all duration-300 hover:border-white hover:bg-white hover:text-black"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-
-              </div>
+           
 
               {/* WHAT I BRING */}
 
@@ -335,28 +238,82 @@ export function About() {
 
               {/* TECHNOLOGY EXPERTISE */}
 
-              <div className="mt-10 border-t border-white/15 pt-6">
 
-                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
-                  CORE TECHNOLOGIES
-                </p>
+              {/* DOWNLOAD RESUME */}
+              <motion.div
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.15,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="mt-10 flex flex-wrap items-center gap-5 border-t border-white/15 pt-7"
+              >
+                <a
+                  href="https://drive.google.com/file/d/11_MFTWzPRQkGp5N9H95A--V8zUHWDWDQ/view?usp=drive_link"
+                  download="Sanal-K-Resume.pdf"
+                  className="group relative inline-flex items-center gap-5 overflow-hidden rounded-full bg-white px-7 py-4 text-black transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_12px_35px_-12px_rgba(255,255,255,0.4)]"
+                >
+                  {/* HOVER BACKGROUND */}
+                  <span className="absolute inset-0 origin-left scale-x-0 bg-[#d4d4d4] transition-transform duration-500 group-hover:scale-x-100" />
 
-                <p className="mt-4 text-sm leading-7 text-white/70">
-                  React.js · Next.js · TypeScript · Node.js ·
-                  Express.js · MongoDB
-                </p>
+                  {/* BUTTON CONTENT */}
+                  <span className="relative z-10 flex items-center gap-3">
+                    <Download
+                      size={18}
+                      strokeWidth={2}
+                      className="transition-transform duration-500 group-hover:translate-y-1"
+                    />
 
-              </div>
+                    <span className="font-mono text-[11px] font-bold tracking-[0.15em]">
+                      DOWNLOAD RESUME
+                    </span>
+                  </span>
 
-            </Reveal>
+                  <span className="relative z-10 flex size-8 items-center justify-center rounded-full bg-black text-white transition-all duration-500 group-hover:rotate-45">
+                    <ArrowUpRight size={17} />
+                  </span>
+                </a>
+
+                {/* DOCUMENT INFO */}
+                <div className="flex flex-col gap-1">
+                  <span className="font-mono text-[9px] tracking-[0.2em] text-white/55">
+                    CURRICULUM VITAE
+                  </span>
+
+                  <span className="font-mono text-[9px] tracking-wider text-white/30">
+                    PDF DOCUMENT / LATEST VERSION
+                  </span>
+                </div>
+              </motion.div>
+
+
+            </motion.div>
 
 
             {/* RIGHT — PREMIUM PORTRAIT */}
 
-            <Reveal className="relative">
 
-              <div className="group relative mx-auto w-full max-w-[480px]">
-
+            <motion.div
+              className="relative"
+              initial={reduceMotion ? false : { opacity: 0, y: 90, scale: 0.94 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{
+                duration: 1.2,
+                delay: 0.2,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <motion.div
+                className="group relative mx-auto w-full max-w-[480px]"
+                style={{
+                  y: portraitY,
+                  rotate: portraitRotate,
+                }}
+              >
                 {/* IMAGE FRAME */}
 
                 <div className="relative aspect-[4/5] overflow-hidden border border-white/15 bg-[#111111]">
@@ -428,9 +385,8 @@ export function About() {
 
                 </div>
 
-              </div>
-
-            </Reveal>
+              </motion.div>
+            </motion.div>
 
           </div>
 
@@ -451,40 +407,59 @@ export function About() {
 
             </div>
 
+
             <motion.dl
-              variants={stagger}
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: 0.3 }}
+              variants={{
+                hidden: {},
+                show: {
+                  transition: {
+                    staggerChildren: 0.16,
+                    delayChildren: 0.1,
+                  },
+                },
+              }}
               className="grid grid-cols-2 gap-y-12 md:grid-cols-4"
             >
-
-              {stats.map((stat) => (
-
+              {stats.map((stat, index) => (
                 <motion.div
                   key={stat.label}
-                  variants={fadeUp}
-                  className="border-l border-white/20 pl-5 md:pl-8"
+                  variants={{
+                    hidden: {
+                      opacity: 0,
+                      y: 55,
+                      filter: 'blur(8px)',
+                    },
+                    show: {
+                      opacity: 1,
+                      y: 0,
+                      filter: 'blur(0px)',
+                      transition: {
+                        duration: 0.85,
+                        ease: [0.22, 1, 0.36, 1],
+                      },
+                    },
+                  }}
+                  className="group border-l border-white/20 pl-5 md:pl-8"
                 >
-
-                  <dd className="text-4xl font-black tracking-[-0.06em] md:text-6xl lg:text-7xl">
-
+                  <motion.dd
+                    whileHover={reduceMotion ? undefined : { y: -5 }}
+                    className="text-4xl font-black tracking-[-0.06em] transition-colors duration-500 group-hover:text-white/70 md:text-6xl lg:text-7xl"
+                  >
                     {'text' in stat
                       ? stat.text
-                      : <Counter to={stat.value!} suffix={stat.suffix} />
-                    }
-
-                  </dd>
+                      : <Counter to={stat.value!} suffix={stat.suffix} />}
+                  </motion.dd>
 
                   <dt className="mt-4 font-mono text-[9px] uppercase tracking-widest text-white/45 sm:text-[10px]">
                     {stat.label}
                   </dt>
-
                 </motion.div>
-
               ))}
-
             </motion.dl>
+
 
           </div>
 
@@ -504,20 +479,48 @@ export function About() {
 
             </div>
 
-            <div className="flex flex-wrap gap-3">
 
+            <motion.div
+              className="flex flex-wrap gap-3"
+              variants={{
+                hidden: {},
+                show: {
+                  transition: {
+                    staggerChildren: 0.08,
+                  },
+                },
+              }}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.4 }}
+            >
               {strengths.map((item) => (
-
-                <span
+                <motion.span
                   key={item}
-                  className="border border-white/20 px-5 py-3 text-xs font-medium text-white/65 transition-all duration-300 hover:border-white hover:bg-white hover:text-black"
+                  variants={{
+                    hidden: { opacity: 0, y: 25, scale: 0.95 },
+                    show: {
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                      transition: {
+                        duration: 0.65,
+                        ease: [0.22, 1, 0.36, 1],
+                      },
+                    },
+                  }}
+                  whileHover={
+                    reduceMotion
+                      ? undefined
+                      : { y: -5, scale: 1.04 }
+                  }
+                  className="cursor-default border border-white/20 px-5 py-3 text-xs font-medium text-white/65 transition-colors duration-300 hover:border-white hover:bg-white hover:text-black"
                 >
                   {item}
-                </span>
-
+                </motion.span>
               ))}
+            </motion.div>
 
-            </div>
 
           </Reveal>
 

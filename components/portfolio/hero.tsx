@@ -42,7 +42,7 @@ export function Hero({ ready }: { ready: boolean }) {
           }}
         >
           <p className="editorial-brand">{profile.name}</p>
-          <p className="editorial-location text-sm">@ {profile.location}</p>
+          <p className="editorial-location ">@ {profile.location}</p>
         </motion.a>
       </motion.div>
 

@@ -19,7 +19,6 @@ export function ExperienceSection() {
       id="experience"
       className="relative isolate overflow-hidden bg-[#050505] px-5 py-28 text-white md:py-36"
     >
-      {/* ABSTRACT LINE BACKGROUND */}
       {/* ANIMATED RIBBON BACKGROUND */}
       <div
         aria-hidden="true"
@@ -52,20 +51,48 @@ export function ExperienceSection() {
       {/* CONTENT */}
       <div className="relative z-10 mx-auto max-w-7xl">
 
-        <div className="mb-20 md:mb-28">
 
-          <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.35em] text-white/45">
-            02 / CAREER JOURNEY
-          </p>
-
-
-          <h2 className="bg-gradient-to-r from-white via-[#bdbdbd] to-[#555555] bg-clip-text text-[clamp(4rem,12vw,11rem)] font-black uppercase leading-[0.78] tracking-[-0.075em] text-transparent">
+        <motion.div
+          className="mb-20 md:mb-28"
+          initial={{ opacity: 0, y: 65 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{
+            duration: 1.1,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+          {/* HEADING */}
+          <motion.h2
+            initial={{ opacity: 0, y: 45, filter: 'blur(10px)' }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+              filter: 'blur(0px)',
+            }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{
+              duration: 1.2,
+              delay: 0.15,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="bg-gradient-to-r from-white via-[#bdbdbd] to-[#555555] bg-clip-text text-[clamp(4rem,12vw,11rem)] font-black uppercase leading-[0.78] tracking-[-0.075em] text-transparent"
+          >
             THE JOURNEY.
-          </h2>
+          </motion.h2>
 
-
-          <div className="mt-12 flex flex-col justify-between gap-6 border-t border-white/20 pt-6 md:flex-row md:items-end">
-
+          {/* DESCRIPTION */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{
+              duration: 0.9,
+              delay: 0.4,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="mt-12 flex flex-col justify-between gap-6 border-t border-white/20 pt-6 md:flex-row md:items-end"
+          >
             <p className="max-w-xl text-sm uppercase leading-7 tracking-wider text-white/55 md:text-base">
               Building products. Solving problems.
               Shipping solutions that make a difference.
@@ -74,10 +101,9 @@ export function ExperienceSection() {
             <span className="font-mono text-[10px] tracking-[0.2em] text-white/40">
               03+ YEARS / DEVELOPMENT
             </span>
+          </motion.div>
+        </motion.div>
 
-          </div>
-
-        </div>
 
 
 
@@ -243,7 +269,7 @@ export function ExperienceSection() {
                           ? exp.projects
                           : exp.projects.slice(0, 1);
 
-                        const toggleProjects:any = () => {
+                        const toggleProjects: any = () => {
                           setExpandedProjectSections((prev) =>
                             prev.includes(experienceKey)
                               ? prev.filter((key) => key !== experienceKey)

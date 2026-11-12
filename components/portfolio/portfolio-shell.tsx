@@ -66,9 +66,9 @@ export function PortfolioShell() {
         <About />
         <Skills />
         <ExperienceSection />
-        <Projects />
-        <Resume />
-        <Services />
+        {/* <Projects /> */}
+        {/* <Resume /> */}
+        {/* <Services /> */}
         <Contact />
       </main>
       <Footer />
